@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hotel Booking - Search</title>
+  <style>
+    :root {
+      /* Prisma Design System - Diamond Theme (eDreams) */
+      --primary-10: #E6F3FF;
+      --primary-30: #5CB4FF;
+      --primary-50: #005DAD;
+      --primary-70: #003F75;
+      --primary-80: #002C52;
+
+      --secondary-50: #FFD633;
+      --secondary-70: #DBAF00;
+
+      --neutral-0: #FFFFFF;
+      --neutral-10: #F5F5F5;
+      --neutral-20: #ECECEC;
+      --neutral-30: #D9D9D9;
+      --neutral-50: #808080;
+      --neutral-80: #2D2D2D;
+      --neutral-90: #1A1A1A;
+
+      --critical-50: #E31C23;
+      --positive-50: #05A854;
+
+      /* Spacing */
+      --space-tiny: 2px;
+      --space-2xs: 4px;
+      --space-xs: 8px;
+      --space-sm: 12px;
+      --space-base: 16px;
+      --space-big: 24px;
+      --space-1xbig: 32px;
+      --space-2xbig: 40px;
+      --space-3xbig: 48px;
+      --space-huge: 64px;
+
+      /* Radii */
+      --radius-sm: 4px;
+      --radius-base: 8px;
+      --radius-big: 12px;
+      --radius-full: 999px;
+
+      /* Typography */
+      --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      --font-size-sm: 12px;
+      --font-size-base: 14px;
+      --font-size-lg: 16px;
+      --font-size-xl: 18px;
+      --font-size-2xl: 24px;
+      --font-size-3xl: 32px;
+
+      --font-weight-regular: 400;
+      --font-weight-medium: 500;
+      --font-weight-bold: 700;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background-color: var(--neutral-0);
+      color: var(--neutral-90);
+      line-height: 1.5;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(135deg, var(--primary-50) 0%, var(--primary-70) 100%);
+      padding: var(--space-3xbig) var(--space-base);
+      min-height: 300px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hero-content {
+      max-width: 1200px;
+      width: 100%;
+    }
+
+    .hero-title {
+      font-size: var(--font-size-3xl);
+      font-weight: var(--font-weight-bold);
+      color: var(--neutral-0);
+      margin-bottom: var(--space-sm);
+    }
+
+    .hero-subtitle {
+      font-size: var(--font-size-lg);
+      color: var(--primary-10);
+      margin-bottom: var(--space-2xbig);
+    }
+
+    /* Search Bar Container */
+    .search-container {
+      background: var(--neutral-0);
+      border-radius: var(--radius-big);
+      padding: var(--space-big);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+      margin-top: -40px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .search-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr auto;
+      gap: var(--space-big);
+      align-items: flex-end;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-label {
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-medium);
+      color: var(--neutral-80);
+      margin-bottom: var(--space-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .form-input,
+    .form-select {
+      font-size: var(--font-size-base);
+      padding: var(--space-sm) var(--space-base);
+      border: 1px solid var(--neutral-30);
+      border-radius: var(--radius-base);
+      font-family: var(--font-family);
+      transition: all 0.3s ease;
+      color: var(--neutral-90);
+      background-color: var(--neutral-0);
+    }
+
+    .form-input:focus,
+    .form-select:focus {
+      outline: none;
+      border-color: var(--primary-50);
+      box-shadow: 0 0 0 3px var(--primary-10);
+    }
+
+    .form-input::placeholder {
+      color: var(--neutral-50);
+    }
+
+    .form-select {
+      cursor: pointer;
+    }
+
+    /* Search Button */
+    .search-btn {
+      background-color: var(--primary-50);
+      color: var(--neutral-0);
+      border: none;
+      padding: var(--space-sm) var(--space-2xbig);
+      border-radius: var(--radius-base);
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-bold);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+
+    .search-btn:hover {
+      background-color: var(--primary-70);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 93, 173, 0.2);
+    }
+
+    .search-btn:active {
+      transform: translateY(0);
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .search-form {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .search-btn {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .search-form {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding: var(--space-1xbig) var(--space-base);
+      }
+
+      .hero-title {
+        font-size: var(--font-size-2xl);
+      }
+
+      .search-container {
+        padding: var(--space-big);
+        margin-top: -20px;
+      }
+
+      .search-btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    /* Datepicker styling */
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      cursor: pointer;
+      color: var(--primary-50);
+    }
+
+    /* Modal for guest selector */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 100;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      animation: fadeIn 0.3s ease;
+    }
+
+    .modal.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .modal-content {
+      background-color: var(--neutral-0);
+      padding: var(--space-2xbig);
+      border-radius: var(--radius-big);
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(30px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .modal-header {
+      font-size: var(--font-size-xl);
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--space-big);
+      color: var(--neutral-90);
+    }
+
+    .guest-group {
+      margin-bottom: var(--space-big);
+    }
+
+    .guest-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-base);
+      font-weight: var(--font-weight-medium);
+    }
+
+    .guest-controls {
+      display: flex;
+      gap: var(--space-base);
+      align-items: center;
+    }
+
+    .guest-btn {
+      background-color: var(--primary-10);
+      border: 1px solid var(--primary-50);
+      color: var(--primary-50);
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-base);
+      cursor: pointer;
+      font-weight: var(--font-weight-bold);
+      font-size: var(--font-size-lg);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .guest-btn:hover {
+      background-color: var(--primary-50);
+      color: var(--neutral-0);
+    }
+
+    .guest-count {
+      min-width: 40px;
+      text-align: center;
+      font-weight: var(--font-weight-bold);
+    }
+
+    .modal-footer {
+      display: flex;
+      gap: var(--space-base);
+      margin-top: var(--space-2xbig);
+    }
+
+    .modal-btn {
+      flex: 1;
+      padding: var(--space-base) var(--space-big);
+      border-radius: var(--radius-base);
+      border: none;
+      font-weight: var(--font-weight-bold);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: var(--font-size-base);
+    }
+
+    .modal-btn-cancel {
+      background-color: var(--neutral-10);
+      color: var(--neutral-80);
+    }
+
+    .modal-btn-cancel:hover {
+      background-color: var(--neutral-20);
+    }
+
+    .modal-btn-confirm {
+      background-color: var(--primary-50);
+      color: var(--neutral-0);
+    }
+
+    .modal-btn-confirm:hover {
+      background-color: var(--primary-70);
+    }
+
+    /* Results Section */
+    .results-section {
+      padding: var(--space-3xbig) var(--space-base);
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-size: var(--font-size-2xl);
+      font-weight: var(--font-weight-bold);
+      color: var(--neutral-90);
+      margin-bottom: var(--space-2xbig);
+    }
+
+    .hotels-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: var(--space-2xbig);
+      margin-bottom: var(--space-3xbig);
+    }
+
+    .hotel-card {
+      background: var(--neutral-0);
+      border-radius: var(--radius-big);
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .hotel-card:hover {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      transform: translateY(-4px);
+    }
+
+    .hotel-image {
+      width: 100%;
+      height: 200px;
+      background: linear-gradient(135deg, var(--primary-30) 0%, var(--primary-50) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      object-fit: cover;
+    }
+
+    .hotel-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .hotel-content {
+      padding: var(--space-big);
+    }
+
+    .hotel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: var(--space-base);
+    }
+
+    .hotel-name {
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-bold);
+      color: var(--neutral-90);
+      margin-bottom: var(--space-xs);
+    }
+
+    .hotel-location {
+      font-size: var(--font-size-sm);
+      color: var(--neutral-50);
+    }
+
+    .hotel-rating {
+      display: flex;
+      align-items: center;
+      gap: var(--space-xs);
+      font-weight: var(--font-weight-bold);
+      color: var(--positive-50);
+    }
+
+    .hotel-rating-stars {
+      color: var(--secondary-50);
+    }
+
+    .hotel-amenities {
+      font-size: var(--font-size-sm);
+      color: var(--neutral-50);
+      margin-bottom: var(--space-big);
+      padding-bottom: var(--space-big);
+      border-bottom: 1px solid var(--neutral-20);
+    }
+
+    .hotel-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .hotel-price {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    .hotel-price-label {
+      font-size: var(--font-size-sm);
+      color: var(--neutral-50);
+    }
+
+    .hotel-price-amount {
+      font-size: var(--font-size-2xl);
+      font-weight: var(--font-weight-bold);
+      color: var(--primary-50);
+    }
+
+    .hotel-btn {
+      background-color: var(--primary-50);
+      color: var(--neutral-0);
+      border: none;
+      padding: var(--space-sm) var(--space-big);
+      border-radius: var(--radius-base);
+      font-weight: var(--font-weight-bold);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: var(--font-size-base);
+    }
+
+    .hotel-btn:hover {
+      background-color: var(--primary-70);
+    }
+
+    /* Carousel Section */
+    .carousel-section {
+      background-color: var(--neutral-10);
+      padding: var(--space-3xbig) var(--space-base);
+    }
+
+    .carousel-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .carousel-wrapper {
+      display: flex;
+      gap: var(--space-2xbig);
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      padding: var(--space-base) 0;
+    }
+
+    .carousel-wrapper::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .carousel-wrapper::-webkit-scrollbar-track {
+      background: var(--neutral-20);
+      border-radius: var(--radius-full);
+    }
+
+    .carousel-wrapper::-webkit-scrollbar-thumb {
+      background: var(--primary-50);
+      border-radius: var(--radius-full);
+    }
+
+    .carousel-card {
+      flex: 0 0 calc(33.333% - var(--space-big));
+      min-width: 300px;
+      background: var(--neutral-0);
+      border-radius: var(--radius-big);
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .carousel-card-image {
+      width: 100%;
+      height: 200px;
+      background: linear-gradient(135deg, var(--secondary-50) 0%, var(--secondary-70) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+    }
+
+    .carousel-card-badge {
+      position: absolute;
+      top: var(--space-base);
+      right: var(--space-base);
+      background-color: var(--critical-50);
+      color: white;
+      padding: var(--space-xs) var(--space-sm);
+      border-radius: var(--radius-base);
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-bold);
+    }
+
+    /* Marketing Section */
+    .marketing-section {
+      padding: var(--space-3xbig) var(--space-base);
+      background: linear-gradient(135deg, var(--primary-50) 0%, var(--primary-70) 100%);
+      color: var(--neutral-0);
+      text-align: center;
+    }
+
+    .marketing-content {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .marketing-title {
+      font-size: var(--font-size-3xl);
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--space-big);
+    }
+
+    .marketing-subtitle {
+      font-size: var(--font-size-xl);
+      margin-bottom: var(--space-2xbig);
+      opacity: 0.9;
+    }
+
+    .marketing-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--space-2xbig);
+      margin-top: var(--space-3xbig);
+    }
+
+    .stat {
+      background: rgba(255, 255, 255, 0.1);
+      padding: var(--space-2xbig);
+      border-radius: var(--radius-big);
+      backdrop-filter: blur(10px);
+    }
+
+    .stat-number {
+      font-size: var(--font-size-3xl);
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--space-sm);
+    }
+
+    .stat-label {
+      font-size: var(--font-size-base);
+      opacity: 0.9;
+    }
+
+    /* Sticky Search Bar */
+    .sticky-search {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: var(--neutral-0);
+      padding: var(--space-base);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-20px);
+      transition: all 0.3s ease;
+    }
+
+    .sticky-search.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .sticky-search-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 var(--space-base);
+    }
+
+    @media (max-width: 640px) {
+      .sticky-search {
+        padding: var(--space-xs);
+      }
+
+      .sticky-search-container {
+        padding: 0 var(--space-xs);
+      }
+    }
+
+    .sticky-search-form {
+      display: flex;
+      gap: var(--space-sm);
+      align-items: center;
+    }
+
+    .sticky-search-summary {
+      flex: 1;
+      font-size: var(--font-size-sm);
+      padding: var(--space-sm) var(--space-base);
+      border: 1px solid var(--neutral-30);
+      border-radius: var(--radius-base);
+      background-color: var(--neutral-0);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: var(--neutral-80);
+    }
+
+    .sticky-search-summary:hover {
+      border-color: var(--primary-50);
+      background-color: var(--primary-10);
+    }
+
+    .sticky-search-btn {
+      padding: var(--space-sm) var(--space-big);
+      height: 40px;
+      white-space: nowrap;
+      border-radius: var(--radius-full);
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 640px) {
+      .sticky-search-container {
+        padding: 0;
+      }
+
+      .sticky-search {
+        padding: var(--space-xs) var(--space-sm);
+      }
+
+      .sticky-search-form {
+        display: flex;
+        gap: var(--space-xs);
+        align-items: center;
+      }
+
+      .sticky-search-summary {
+        font-size: 11px;
+        padding: var(--space-xs) var(--space-sm);
+        border-radius: var(--radius-base);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        min-width: 0;
+      }
+
+      .sticky-search-btn {
+        padding: 6px 14px;
+        height: 32px;
+        font-size: 11px;
+        font-weight: var(--font-weight-bold);
+        border-radius: var(--radius-full);
+        flex-shrink: 0;
+        white-space: nowrap;
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .sticky-search-form {
+        grid-template-columns: 1fr 1fr auto;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .sticky-search-form {
+        grid-template-columns: 1fr;
+      }
+
+      .sticky-search-btn {
+        width: 100%;
+      }
+    }
+
+    /* Why Book With Us Section */
+    .benefits-section {
+      padding: var(--space-3xbig) var(--space-base);
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: var(--space-2xbig);
+    }
+
+    .benefit-card {
+      text-align: center;
+      padding: var(--space-2xbig);
+    }
+
+    .benefit-icon {
+      font-size: 48px;
+      margin-bottom: var(--space-big);
+    }
+
+    .benefit-title {
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-bold);
+      color: var(--neutral-90);
+      margin-bottom: var(--space-sm);
+    }
+
+    .benefit-description {
+      font-size: var(--font-size-base);
+      color: var(--neutral-50);
+      line-height: 1.6;
+    }
+
+    /* Responsive Carousel */
+    @media (max-width: 768px) {
+      .carousel-card {
+        flex: 0 0 calc(50% - var(--space-big));
+      }
+
+      .marketing-title {
+        font-size: var(--font-size-2xl);
+      }
+
+      .hotels-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Sticky Search Bar -->
+  <div class="sticky-search" id="stickySearch">
+    <div class="sticky-search-container">
+      <form class="sticky-search-form" id="stickySearchForm">
+        <div class="sticky-search-summary" id="stickySummary">Madrid • Click to modify search</div>
+        <button type="submit" class="search-btn sticky-search-btn">Search</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Hero Section -->
+  <div class="hero">
+    <div class="hero-content">
+      <h1 class="hero-title">Hotels in Madrid</h1>
+      <p class="hero-subtitle">Find your perfect stay</p>
+
+      <!-- Search Bar -->
+      <div class="search-container">
+        <form class="search-form" id="searchForm">
+          <!-- Check-in Date -->
+          <div class="form-group">
+            <label class="form-label">Check-in</label>
+            <input
+              type="date"
+              class="form-input"
+              id="checkIn"
+            >
+          </div>
+
+          <!-- Check-out Date -->
+          <div class="form-group">
+            <label class="form-label">Check-out</label>
+            <input
+              type="date"
+              class="form-input"
+              id="checkOut"
+            >
+          </div>
+
+          <!-- Guests -->
+          <div class="form-group">
+            <label class="form-label">Guests</label>
+            <input
+              type="text"
+              class="form-input"
+              id="guests"
+              placeholder="2 guests"
+              readonly
+              style="cursor: pointer;"
+            >
+          </div>
+
+          <!-- Search Button -->
+          <button type="submit" class="search-btn">Search</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Guest Selector Modal -->
+  <div class="modal" id="guestModal">
+    <div class="modal-content">
+      <div class="modal-header">Rooms & Guests</div>
+
+      <div class="guest-group">
+        <div class="guest-label">
+          <span>Rooms</span>
+          <div class="guest-controls">
+            <button type="button" class="guest-btn" id="roomsDecrement">−</button>
+            <span class="guest-count" id="roomsCount">1</span>
+            <button type="button" class="guest-btn" id="roomsIncrement">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="guest-group">
+        <div class="guest-label">
+          <span>Adults</span>
+          <div class="guest-controls">
+            <button type="button" class="guest-btn" id="adultsDecrement">−</button>
+            <span class="guest-count" id="adultsCount">2</span>
+            <button type="button" class="guest-btn" id="adultsIncrement">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="guest-group">
+        <div class="guest-label">
+          <span>Children</span>
+          <div class="guest-controls">
+            <button type="button" class="guest-btn" id="childrenDecrement">−</button>
+            <span class="guest-count" id="childrenCount">0</span>
+            <button type="button" class="guest-btn" id="childrenIncrement">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="modal-btn modal-btn-cancel" id="cancelBtn">Cancel</button>
+        <button type="button" class="modal-btn modal-btn-confirm" id="confirmBtn">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Guest selector state
+    let guests = {
+      rooms: 1,
+      adults: 2,
+      children: 0
+    };
+
+    const guestModal = document.getElementById('guestModal');
+    const guestInput = document.getElementById('guests');
+    const roomsCount = document.getElementById('roomsCount');
+    const adultsCount = document.getElementById('adultsCount');
+    const childrenCount = document.getElementById('childrenCount');
+
+    // Update guest display
+    function updateGuestDisplay() {
+      const roomText = guests.rooms === 1 ? 'room' : 'rooms';
+      const adultText = guests.adults === 1 ? 'adult' : 'adults';
+      const childText = guests.children === 1 ? 'child' : 'children';
+
+      let guestText = `${guests.rooms} ${roomText}`;
+      guestText += ` • ${guests.adults} ${adultText}`;
+      if (guests.children > 0) {
+        guestText += `, ${guests.children} ${childText}`;
+      }
+
+      guestInput.value = guestText;
+    }
+
+    // Guest modal handlers
+    guestInput.addEventListener('click', () => {
+      guestModal.classList.add('active');
+    });
+
+    // Rooms handlers
+    document.getElementById('roomsIncrement').addEventListener('click', (e) => {
+      e.preventDefault();
+      if (guests.rooms < 8) {
+        guests.rooms++;
+        roomsCount.textContent = guests.rooms;
+      }
+    });
+
+    document.getElementById('roomsDecrement').addEventListener('click', (e) => {
+      e.preventDefault();
+      if (guests.rooms > 1) {
+        guests.rooms--;
+        roomsCount.textContent = guests.rooms;
+      }
+    });
+
+    // Adults handlers
+    document.getElementById('adultsIncrement').addEventListener('click', (e) => {
+      e.preventDefault();
+      if (guests.adults < 20) {
+        guests.adults++;
+        adultsCount.textContent = guests.adults;
+      }
+    });
+
+    document.getElementById('adultsDecrement').addEventListener('click', (e) => {
+      e.preventDefault();
+      if (guests.adults > 1) {
+        guests.adults--;
+        adultsCount.textContent = guests.adults;
+      }
+    });
+
+    // Children handlers
+    document.getElementById('childrenIncrement').addEventListener('click', (e) => {
+      e.preventDefault();
+      if (guests.children < 10) {
+        guests.children++;
+        childrenCount.textContent = guests.children;
+      }
+    });
+
+    document.getElementById('childrenDecrement').addEventListener('click', (e) => {
+      e.preventDefault();
+      if (guests.children > 0) {
+        guests.children--;
+        childrenCount.textContent = guests.children;
+      }
+    });
+
+    document.getElementById('confirmBtn').addEventListener('click', () => {
+      updateGuestDisplay();
+      guestModal.classList.remove('active');
+    });
+
+    document.getElementById('cancelBtn').addEventListener('click', () => {
+      guestModal.classList.remove('active');
+    });
+
+    // Close modal when clicking outside
+    guestModal.addEventListener('click', (e) => {
+      if (e.target === guestModal) {
+        guestModal.classList.remove('active');
+      }
+    });
+
+    // Set default dates
+    function setDefaultDates() {
+      const today = new Date();
+      const checkInDate = today.toISOString().split('T')[0];
+
+      const checkOutDate = new Date(today);
+      checkOutDate.setDate(checkOutDate.getDate() + 3);
+      const checkOutDateStr = checkOutDate.toISOString().split('T')[0];
+
+      document.getElementById('checkIn').value = checkInDate;
+      document.getElementById('checkOut').value = checkOutDateStr;
+    }
+
+    // Form submission
+    document.getElementById('searchForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const checkIn = document.getElementById('checkIn').value;
+      const checkOut = document.getElementById('checkOut').value;
+
+      console.log('Search submitted:', {
+        destination: 'Madrid',
+        checkIn,
+        checkOut,
+        rooms: guests.rooms,
+        adults: guests.adults,
+        children: guests.children
+      });
+
+      alert(`Searching for ${guests.rooms} room${guests.rooms !== 1 ? 's' : ''} in Madrid from ${checkIn} to ${checkOut}`);
+    });
+
+    // Sticky Search Bar
+    const stickySearch = document.getElementById('stickySearch');
+    const stickySummary = document.getElementById('stickySummary');
+    const stickySearchForm = document.getElementById('stickySearchForm');
+    const searchContainer = document.querySelector('.search-container');
+    const mainCheckIn = document.getElementById('checkIn');
+    const mainCheckOut = document.getElementById('checkOut');
+
+    // Update sticky summary display
+    function updateStickySummary() {
+      const checkIn = mainCheckIn.value ? new Date(mainCheckIn.value).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'Check-in';
+      const checkOut = mainCheckOut.value ? new Date(mainCheckOut.value).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'Check-out';
+      const roomText = guests.rooms === 1 ? 'room' : 'rooms';
+
+      stickySummary.textContent = `Madrid • ${checkIn} - ${checkOut} • ${guests.rooms} ${roomText}`;
+    }
+
+    // Detect scroll position
+    window.addEventListener('scroll', () => {
+      const searchTop = searchContainer.getBoundingClientRect().top;
+
+      if (searchTop < 0) {
+        stickySearch.classList.add('active');
+      } else {
+        stickySearch.classList.remove('active');
+      }
+    });
+
+    // Click on sticky summary to open guest modal
+    stickySummary.addEventListener('click', () => {
+      guestModal.classList.add('active');
+    });
+
+    // Update summary when dates change
+    mainCheckIn.addEventListener('change', updateStickySummary);
+    mainCheckOut.addEventListener('change', updateStickySummary);
+
+    // Update summary when guests change
+    const originalConfirmBtn = document.getElementById('confirmBtn');
+    originalConfirmBtn.addEventListener('click', () => {
+      updateStickySummary();
+    });
+
+    // Sticky search form submission
+    stickySearchForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const checkIn = mainCheckIn.value;
+      const checkOut = mainCheckOut.value;
+
+      alert(`Searching for ${guests.rooms} room${guests.rooms !== 1 ? 's' : ''} in Madrid from ${checkIn} to ${checkOut}`);
+    });
+
+    // Initialize
+    setDefaultDates();
+    updateGuestDisplay();
+    updateStickySummary();
+  </script>
+
+  <!-- Hotel Cards Section -->
+  <div class="results-section">
+    <h2 class="section-title">Recommended Hotels in Madrid</h2>
+    <div class="hotels-grid">
+      <!-- Hotel Card 1 -->
+      <div class="hotel-card">
+        <div class="hotel-image" style="background-image: url('file:///Users/thuy.tran/Downloads/Img.png'); background-size: cover; background-position: center;"></div>
+        <div class="hotel-content">
+          <div class="hotel-header">
+            <div>
+              <div class="hotel-name">The Ritz Madrid</div>
+              <div class="hotel-location">City Center, Madrid</div>
+            </div>
+            <div class="hotel-rating">
+              <span class="hotel-rating-stars">★★★★★</span>
+              <span>4.9</span>
+            </div>
+          </div>
+          <div class="hotel-amenities">Wi-Fi • Spa • Restaurant • Pool</div>
+          <div class="hotel-footer">
+            <div class="hotel-price">
+              <div class="hotel-price-label">per night</div>
+              <div class="hotel-price-amount">€450</div>
+            </div>
+            <button class="hotel-btn">Show details</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hotel Card 2 -->
+      <div class="hotel-card">
+        <div class="hotel-image" style="background-image: url('file:///Users/thuy.tran/Downloads/Img (1).png'); background-size: cover; background-position: center;"></div>
+        <div class="hotel-content">
+          <div class="hotel-header">
+            <div>
+              <div class="hotel-name">Hotel Gran Via</div>
+              <div class="hotel-location">Gran Via, Madrid</div>
+            </div>
+            <div class="hotel-rating">
+              <span class="hotel-rating-stars">★★★★☆</span>
+              <span>4.6</span>
+            </div>
+          </div>
+          <div class="hotel-amenities">Wi-Fi • Gym • Restaurant</div>
+          <div class="hotel-footer">
+            <div class="hotel-price">
+              <div class="hotel-price-label">per night</div>
+              <div class="hotel-price-amount">€280</div>
+            </div>
+            <button class="hotel-btn">Show details</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hotel Card 3 -->
+      <div class="hotel-card">
+        <div class="hotel-image" style="background-image: url('file:///Users/thuy.tran/Downloads/Img (2).png'); background-size: cover; background-position: center;"></div>
+        <div class="hotel-content">
+          <div class="hotel-header">
+            <div>
+              <div class="hotel-name">Madrid Retiro Palace</div>
+              <div class="hotel-location">Retiro, Madrid</div>
+            </div>
+            <div class="hotel-rating">
+              <span class="hotel-rating-stars">★★★★★</span>
+              <span>4.8</span>
+            </div>
+          </div>
+          <div class="hotel-amenities">Wi-Fi • Spa • Gym • Pool</div>
+          <div class="hotel-footer">
+            <div class="hotel-price">
+              <div class="hotel-price-label">per night</div>
+              <div class="hotel-price-amount">€520</div>
+            </div>
+            <button class="hotel-btn">Show details</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hotel Card 4 -->
+      <div class="hotel-card">
+        <div class="hotel-image" style="background-image: url('file:///Users/thuy.tran/Downloads/Img.png'); background-size: cover; background-position: center;"></div>
+        <div class="hotel-content">
+          <div class="hotel-header">
+            <div>
+              <div class="hotel-name">Boutique Madrid</div>
+              <div class="hotel-location">Las Letras, Madrid</div>
+            </div>
+            <div class="hotel-rating">
+              <span class="hotel-rating-stars">★★★★☆</span>
+              <span>4.5</span>
+            </div>
+          </div>
+          <div class="hotel-amenities">Wi-Fi • Restaurant • Terrace</div>
+          <div class="hotel-footer">
+            <div class="hotel-price">
+              <div class="hotel-price-label">per night</div>
+              <div class="hotel-price-amount">€200</div>
+            </div>
+            <button class="hotel-btn">Show details</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- Marketing Section -->
+  <div class="marketing-section">
+    <div class="marketing-content">
+      <h2 class="marketing-title">Millions of stays, endless possibilities</h2>
+      <p class="marketing-subtitle">Find the perfect hotel for your next adventure in Madrid</p>
+
+      <div class="marketing-stats">
+        <div class="stat">
+          <div class="stat-number">10M+</div>
+          <div class="stat-label">Properties Worldwide</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">2M+</div>
+          <div class="stat-label">Happy Travelers</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">24/7</div>
+          <div class="stat-label">Customer Support</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">100%</div>
+          <div class="stat-label">Best Price Guarantee</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Why Book With Us Section -->
+  <div class="benefits-section">
+    <h2 class="section-title">Why Book With Us?</h2>
+    <div class="benefits-grid">
+      <div class="benefit-card">
+        <div class="benefit-icon">🏆</div>
+        <div class="benefit-title">Best Price Guarantee</div>
+        <div class="benefit-description">We guarantee you get the best rates. If you find a lower price, we'll match it.</div>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">🔒</div>
+        <div class="benefit-title">Secure Booking</div>
+        <div class="benefit-description">Your payment is protected with industry-leading security standards.</div>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">⚡</div>
+        <div class="benefit-title">Instant Confirmation</div>
+        <div class="benefit-description">Book and get instant confirmation. No waiting, no surprises.</div>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">🌍</div>
+        <div class="benefit-title">Local Knowledge</div>
+        <div class="benefit-description">Expert tips and recommendations from travelers like you.</div>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">💬</div>
+        <div class="benefit-title">24/7 Support</div>
+        <div class="benefit-description">Our team is always ready to help, day or night.</div>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">♻️</div>
+        <div class="benefit-title">Flexible Cancellation</div>
+        <div class="benefit-description">Change your plans anytime with our flexible cancellation policy.</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
